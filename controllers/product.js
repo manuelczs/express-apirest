@@ -29,7 +29,7 @@ const saveProduct = (req, res) => {
   product.picture = req.body.picture;
   product.price = req.body.price;
   product.category = req.body.category;
-  product.description = req.body.descroption;
+  product.description = req.body.description;
 
   console.log(product);
 
