@@ -10,11 +10,21 @@ app.use(bodyParser.json())
 
 
 app.get('/api/product', (req, res) => {
-  res.send(200, {products: []})
+  Product.find({}, (err, products) => {
+    if(err) return res.status(500).send({message: 'Error request'})
+    if(!products) return res.status(404).send({ message: 'Products does not exists'})
+    res.send(200, { products })
+  })
 })
 
 app.get('/api/product/:productId', (req, res) => {
-  res.send('Api get ' + req.params.productId)
+  let productId = req.params.productId
+
+  Product.findById(productId, (err, product) => {
+    if(err) return res.status(500).send({message: 'Error request'})
+    if(!product) return res.status(404).send({ message: 'Product does not exists'})
+    res.status(200).send({ product })
+  })
 })
 
 app.post('/api/product', (req, res) => {
@@ -37,10 +47,27 @@ app.post('/api/product', (req, res) => {
 })
 
 app.put('/api/product/:productId', (req, res) => {
+  let productId = req.params.productId
+  let update = req.body
+  
+  Product.findByIdAndUpdate(productId, update, (err, productUpdated) => {
+    if(err) res.status(500).send({ message: `Error updating the product: ${err}`})
+    
+    res.status(200).send({ productUpdated })
+  })
 })
 
 app.delete('/api/product/:productId', (req, res) => {
-
+  let productId = req.params.productId
+  
+  Product.findById(productId, (err, product) => {
+    if(err) res.status(500).send({ message: `Error deleting the product: ${err}` })
+  
+    product.remove(err => {
+      if(err) res.status(500).send({ message: `Error deleting the product: ${err}` })
+      res.status(200).send({ message: `The product ${productId} was eliminated`})
+    })
+  })
 })
 
 mongoose.connect('mongodb://localhost:27018/shop', (err, res) => {
