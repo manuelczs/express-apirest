@@ -1,0 +1,20 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: Products API
+host: localhost:3001
+basepath: /
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /product:
+    get:
+      description: Get the resources from databases
+      summary: Get products
+      operationId: getOperations
+      parameters:
+        - name: city
